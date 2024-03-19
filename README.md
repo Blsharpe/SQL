@@ -1,5 +1,5 @@
 # SQL
-# Welcome to my SQL Portfolio.
+## Welcome to my SQL Portfolio.
 
 This code repository shows examples of SQL I've written. 
 
