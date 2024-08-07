@@ -73,7 +73,7 @@ ROUND(AVG(paid_time_off_days), 1) AS avg_pto_days,
 ROUND (AVG(maternity_leave_weeks), 1) AS avg_maternity_weeks,
 healthcare_benefits
 FROM fortune_companies
-WHERE avg_employee_tenure > 4
+WHERE avg_employee_tenure >= 5
 AND healthcare_benefits = 1
 AND paid_time_off_days > 7
 GROUP BY industry
