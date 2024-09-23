@@ -28,3 +28,12 @@ ORDER BY price ASC LIMIT 1;
 SELECT Round(Sum(price*quantity), 2), product
 FROM BIT_DB.JanSales
 group by product;
+
+#6. Which products were sold in February at 548 Lincoln St, Seattle, WA 98101, 
+how many of each were sold, and what was the total revenue?
+
+SELECT sum(Quantity), Price, Product, Sum(Quantity)*price as Revenue, location
+FROM BIT_DB.FebSales
+Group By location
+having location like '%548 Lincoln St, Seattle%'
+;
