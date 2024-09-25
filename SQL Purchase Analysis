@@ -1,0 +1,57 @@
+The following queries are used to obtain and maniupulate customer and purchase information from related tables.
+
+#1
+The following code uses four related tables to calculate revenue and join it with artist and genre information for a desired time frame. 
+
+SELECT  ROUND(Invoice_items.UnitPrice * SUM(invoice_items.Quantity),2) AS Revenue ,genres.Name AS Genre, tracks.Composer,
+CASE
+WHEN InvoiceDate like '%2010%'
+THEN '2010'
+WHEN InvoiceDate like '%2009%'
+THEN '2009'
+WHEN InvoiceDate like '%2008%'
+THEN '2008'
+WHEN InvoiceDate like '%2007%'
+THEN '2007'
+WHEN InvoiceDate like '%2006%'
+THEN '2006'
+WHEN InvoiceDate like '%2005%'
+THEN '2005'
+ELSE 'Before 2005'
+END AS "YearSold"
+FROM chinook.invoice_items
+INNER JOIN chinook.tracks
+ON invoice_items.TrackId = tracks.Trackid
+INNER JOIN chinook.invoices
+ON invoice_items.InvoiceId = invoices.InvoiceId
+INNER JOIN chinook.genres
+ON tracks.GenreId = genres.GenreId
+WHERE Composer IS NOT NULL
+GROUP BY genres.Name, tracks.Composer
+;
+
+#2 This query shows customers (their full names, customer ID, and country) who are not in the US. 
+
+SELECT CustomerID, Country, FirstName, LastName
+FROM chinook.customers
+WHERE Country != 'USA';
+
+#3 This query shows only the customers from Brazil.
+
+SELECT CustomerId, FirstName, LastName, Country
+FROM chinook.customers
+WHERE Country = 'Brazil';
+
+#4
+This query finds the Invoices of customers who are from Brazil. The resulting table displays the customer's 
+full name, invoice ID, invoice date, and billing country.
+
+SELECT
+FirstName, LastName, 
+InvoiceID, InvoiceDate, BillingCountry
+FROM chinook.customers
+LEFT JOIN 
+chinook.invoices
+ON 
+customers.CustomerId = invoices.CustomerId
+WHERE BillingCountry = 'Brazil';
