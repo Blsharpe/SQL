@@ -1,9 +1,12 @@
-The following queries are used to obtain and maniupulate customer and purchase information from related tables.
+#Querying a customer and purchase database to analyze sales, customer demographics, and invoice data.
 
-#1
-The following code uses four related tables to calculate revenue and join it with artist and genre information for a desired time frame. 
 
-SELECT  ROUND(Invoice_items.UnitPrice * SUM(invoice_items.Quantity),2) AS Revenue ,genres.Name AS Genre, tracks.Composer,
+-- Query 1: Calculate revenue and categorize it by artist, genre, and year.
+-- Joins four related tables: invoice_items, tracks, invoices, and genres.
+-- Groups by genre and composer while categorizing sales by year.
+SELECT  ROUND(Invoice_items.UnitPrice * SUM(invoice_items.Quantity),2) AS Revenue, -- Calculates total revenue per composer & genre
+genres.Name AS Genre, -- Genre of the track
+tracks.Composer, -- Composer of the track
 CASE
 WHEN InvoiceDate like '%2010%'
 THEN '2010'
@@ -18,7 +21,7 @@ THEN '2006'
 WHEN InvoiceDate like '%2005%'
 THEN '2005'
 ELSE 'Before 2005'
-END AS "YearSold"
+END AS "YearSold"  -- Categorizes sales based on the invoice year
 FROM chinook.invoice_items
 INNER JOIN chinook.tracks
 ON invoice_items.TrackId = tracks.Trackid
@@ -26,26 +29,26 @@ INNER JOIN chinook.invoices
 ON invoice_items.InvoiceId = invoices.InvoiceId
 INNER JOIN chinook.genres
 ON tracks.GenreId = genres.GenreId
-WHERE Composer IS NOT NULL
+WHERE Composer IS NOT NULL  -- Filters out entries with no composer
 GROUP BY genres.Name, tracks.Composer
 ;
 
-#2 This query shows customers (their full names, customer ID, and country) who are not in the US. 
-
+-- Query 2: Retrieve a list of non-US customers.
+-- Filters customers based on country.
 SELECT CustomerID, Country, FirstName, LastName
 FROM chinook.customers
 WHERE Country != 'USA';
 
-#3 This query shows only the customers from Brazil.
+-- Query 3: Retrieve a list of customers specifically from Brazil.
 
 SELECT CustomerId, FirstName, LastName, Country
 FROM chinook.customers
 WHERE Country = 'Brazil';
 
-#4
-This query finds the Invoices of customers who are from Brazil. The resulting table displays the customer's 
-full name, invoice ID, invoice date, and billing country.
 
+-- Query 4: Retrieve invoices for Brazilian customers.
+-- Joins the customers table with invoices using CustomerId to find their purchases.
+-- The resulting table displays the customer full name, invoice ID, invoice date, and billing country.
 SELECT
 FirstName, LastName, 
 InvoiceID, InvoiceDate, BillingCountry
