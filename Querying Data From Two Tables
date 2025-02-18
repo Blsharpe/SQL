@@ -1,6 +1,13 @@
-# Querying data from the following two tables to find customer and product information.
+# Querying data from two related tables to find customer and product information.
 
--- TELECOM DATA TABLE #1: products 
+/* This SQL analysis provides insights into telecom product subscriptions, 
+ specifically identifying which customers are subscribed to internet services, 
+their associated product details, and contact information. These queries can help a telecom company target marketing campaigns, 
+analyze internet service demand, and optimize subscription offerings. */
+
+-- Table 1: Products
+-- Stores details about telecom products, including internet plans, phone plans, and TV packages.
+
 CREATE TABLE products (
     product_id INTEGER PRIMARY KEY,
     product_name TEXT,
@@ -10,6 +17,7 @@ CREATE TABLE products (
     monthly_price DECIMAL(8, 2)
 );
 
+-- Insert sample telecom product data.
 INSERT INTO products (product_id, product_name, product_type, speed_mbps, data_limit_gb, monthly_price)
 VALUES
     (1, 'High-Speed Internet', 'Internet', 100, 500, 49.99),
@@ -18,8 +26,9 @@ VALUES
     (4, 'Fiber Optic Internet', 'Internet', 500, 1000, 79.99),
     (5, 'Family Plan', 'Cell Phone Service', NULL, NULL, 25.00);
     
-    
--- TELECOM DATA TABLE #2: customer_subscriptions
+-- Table 2: Customer Subscriptions
+-- Stores which customers have subscribed to which products.
+
 CREATE TABLE customer_subscriptions (
     customer_id TEXT PRIMARY KEY,
     product_id INTEGER,
@@ -28,6 +37,7 @@ CREATE TABLE customer_subscriptions (
     FOREIGN KEY (product_id) REFERENCES products (product_id)
 );
 
+-- Insert sample customer subscription data.
 INSERT INTO customer_subscriptions (customer_id, product_id, price, email)
 VALUES
     ('123456789012', 1, 49.99, 'john.doe@example.com'),
@@ -36,17 +46,20 @@ VALUES
     ('456789012345', 4, 79.99, 'bob.johnson@example.com'),
     ('567890123456', 1, 49.99, 'susan.wilson@example.com');
 
-#Selecting only internet product types from product table.
+-- Query 1: Retrieve all Internet product types from the products table.
+-- This filters the table to show only Internet-related products.
 SELECT*
 FROM products
 WHERE product_type = "Internet";
 
-#Selecting customer IDs with the product ID for high-speed internet. This identifier is used in both tables.
+-- Query 2: Select customer IDs for those who have subscribed to the "High-Speed Internet" plan.
+-- Uses product_id = 1, which corresponds to "High-Speed Internet" in the products table.
 SELECT customer_id
 FROM customer_subscriptions
 WHERE product_id = 1;
 
-# Finding the customer email addresses from customer_subscriptions table that have the product id that corresponds with "Internet" in the products table.
+-- Query 3: Retrieve email addresses of customers who have subscribed to any Internet service.
+-- Uses a subquery to find product IDs where product_type = 'Internet' and then matches them in customer_subscriptions.
 SELECT email
 FROM customer_subscriptions
 WHERE product_id
