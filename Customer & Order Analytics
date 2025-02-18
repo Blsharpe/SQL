@@ -1,41 +1,59 @@
--- In this SQL, I'm querying a database with multiple tables in it to quantify statistics about customer and order data.-- 
+-- Querying a database with multiple tables to analyze customer and order statistics.
 
--- #1. How many orders were placed in January? --
+-- These queries provide information on customer purchasing trends, product performance, and regional sales patterns, 
+-- offering insights into seasonal demand, high-revenue products, and key market locations to support business strategy, pricing decisions, and inventory management.
+
+-- #1. Count how many orders were placed in January.
+-- Filters out invalid Order IDs by checking length and excluding header text.
+
 SELECT COUNT(orderid)
 FROM BIT_DB.JanSales
 WHERE length(orderid) = 6 
 AND orderid <> 'Order ID';
 
--- #2. How many of those orders were for an iPhone? --
+-- #2. Count how many orders in January were specifically for iPhones.
+-- Uses the same filters as above but adds a condition for 'iPhone' in the Product column.
+
 SELECT COUNT(orderid)
 FROM BIT_DB.JanSales
 WHERE Product = 'iPhone'
 AND length(orderid) = 6
 AND orderid <> 'Order ID';
 
--- #3. Select the customer account numbers for all the orders that were placed in February. --
+-- #3. Select unique customer account numbers for all orders placed in February.
+-- This query selects all unique account numbers from the customers table.
 SELECT distinct acctnum
 FROM BIT_DB.customers;
 
 
--- #4. Which product was the cheapest one sold in January, and what was the price? --
+-- #4. Identify the cheapest product sold in January and its price.
+-- Orders results by price in ascending order & limits to 1 record.
+
 SELECT distinct product, price 
 FROM BIT_DB.JanSales 
 ORDER BY price ASC LIMIT 1;
 
--- #5. What is the total revenue for each product sold in January? --
+-- #5. Calculate total revenue for each product sold in January.
+-- Uses SUM(price * quantity) to find total revenue per product.
+-- ROUND() aggregate ensures revenue is formatted to have only 2 decimal places.
+
 SELECT Round(Sum(price*quantity), 2), product
 FROM BIT_DB.JanSales
 group by product;
 
-/* #6. Which products were sold in February at 548 Lincoln St, Seattle, WA 98101, 
-how many of each were sold, and what was the total revenue? */
+-- #6. Find products sold at a specific location in February, 
+-- how many of each were sold, and their total revenue.
+-- Uses GROUP BY location and filters for '548 Lincoln St, Seattle'.
+
 SELECT sum(Quantity), Price, Product, Sum(Quantity)*price as Revenue, location
 FROM BIT_DB.FebSales
 Group By location
 having location like '%548 Lincoln St, Seattle%';
 
--- #7. List all the products sold in Los Angeles in February, and include how many of each were sold. --
+
+-- #7. List all products sold in Los Angeles in February, including quantity.
+-- Groups by product and filters for 'Los Angeles' in the location field.
+
 SELECT Product, Sum(quantity)
 FROM BIT_DB.FebSales 
 WHERE location like '%Los Angeles%'
