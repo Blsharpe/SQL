@@ -1,4 +1,14 @@
-# This project uses data from the following table:
+-- Querying the Superstore database to analyze product pricing, stock levels, and category-specific statistics.
+
+/*This analysis provides insights into product pricing, inventory trends, and category-specific statistics 
+in the Superstore database. It identifies high-value items, average price points for kitchen supplies, and how 
+stock levels relate to customer ratings. These insights can help in pricing strategy, inventory management,
+and understanding customer preferences for better retail decision-making.*/
+
+
+-- Table: superstore
+-- Stores details about various retail items, including price, category, stock levels, and customer ratings.
+This project uses data from the following table:
 CREATE TABLE superstore (
     item_id INTEGER PRIMARY KEY,
     item_name TEXT,
@@ -26,24 +36,27 @@ VALUES
     (14, 'Cutlery Set', 'Kitchen Supplies', 34.50, 40, 4.4),
     (15, 'Cozy Throw Blanket', 'Furnishings', 24.99, 100, 4.2);
 
-# In the project I use SQL to query the Superstore database to get information about products and pricing.
 
-# Use SELECt statement to order the items by descending price.
+-- Query 1: Retrieve all items sorted by price in descending order.
+-- Helps identify the most expensive products at the store.
 SELECT *
 FROM superstore
 ORDER BY price desc;
 
-# Use a select statement to show the maximum price of all of the items sold.
+-- Query 2: Find the highest-priced item in the Superstore.
+-- Uses MAX() to return the most expensive item.
 SELECT MAX(price)
 FROM superstore;
 
-# Show a statistic about "Kitchen Supplies" at the Superstore.
+-- Query 3: Calculate the average price of all "Kitchen Supplies" products.
+-- Provides insights into typical pricing within this category.
 SELECT AVG(price), category
 FROM superstore
 WHERE category = "Kitchen Supplies"
 ;
 
-# Show a statistic about item stock.
+-- Query 4: Analyze stock levels and average ratings.
+-- Groups by customer rating to understand if higher-rated items tend to have more or less stock.
 SELECT AVG(stock_quantity), average_rating
 FROM superstore
 GROUP BY(average_rating) desc;
