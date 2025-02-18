@@ -1,8 +1,18 @@
-This project utilized data from the following Netflix dataset:
+# Querying a Netflix database containing information about titles, directors, and cast members.
+
+/* This Netflix database analysis provides insights into content trends and catalog management. These queries help track
+streaming trends, content longevity, and directorial influence, making them useful for curation, audience engagement, and industry analysis.*/
+
+-- Table 1: netflix_titles_info
+-- Stores metadata about TV shows and movies, including release dates, country of origin, and ratings.
 
 CREATE TABLE netflix_titles_info
     ("show_id" varchar(5), "type" varchar(7), "title" varchar(58), "country" varchar(74), "date_added" timestamp, "release_year" int, "rating" varchar(5), "duration" varchar(9), "listed_in" varchar(74))
 ;
+
+
+-- Table 2: netflix_people
+-- Stores information about directors and cast members for each title.
 
 CREATE TABLE netflix_people
     ("show_id" varchar(5), "director" varchar(54), "cast" varchar(532))
@@ -58,38 +68,38 @@ VALUES
     ('s20', NULL, 'Blanca SuÃ¡rez| IvÃ¡n Marcos| Ã“scar Casas| AdriÃ¡n Lastra| Francesc Garrido| Stefan Weinert| Julia MÃ¶ller| Alicia Chojnowski')
     ;
 
-1.	Querying the database to find out when the most recent batch of tv shows and/or movies were added to the database.
 
-Select date_added, type, title
-From "netflix_titles_info"
-Order By date_added desc;
+-- Query 1: Retrieve the most recent batch of TV shows and movies added to the database.
+-- Orders results by date_added in descending order to show the latest titles first.
+SELECT date_added, type, title
+FROM netflix_titles_info
+ORDER BY date_added DESC;
 
-2.	Querying the database to find the most recent group of tv shows and/or movies added to the database. I specified to extract the date and to give me the maximum date.
+-- Query 2: Find the most recent addition date of any TV show or movie in the database.
+-- Uses MAX() to return the latest date when content was added.
+SELECT MAX(DATE(date_added))
+FROM netflix_titles_info;
 
-select max(date(date_added))
-FROM "netflix_titles_info";
+-- Query 3: Uses Postgres SQL: List all TV shows and movies in alphabetical order.
+-- Sorts titles in ascending order for easy browsing.
+SELECT title
+FROM netflix_titles_info
+ORDER BY title ASC;
 
-3.	Using Postgre SQL to list the movies and tv shows in alphabetical order.
+-- Query 4: Find the director of "The Starling" by joining the two tables on show_id.
+-- Uses LEFT JOIN to ensure all records from netflix_people are included, even if no match exists.
+SELECT netflix_people.director
+FROM netflix_people
+LEFT JOIN netflix_titles_info
+ON netflix_people.show_id = netflix_titles_info.show_id
+WHERE netflix_titles_info.title = 'The Starling';
 
-select title
-FROM "netflix_titles_info"
-Order By title asc;
-
-4.	Joining two databases using a column they have in common - show_id. I then use it to find the director of "The Starling".
-
-select netflix_people.director
-from "netflix_people"
-Left Join "netflix_titles_info"
-On netflix_people.show_id = netflix_titles_info.show_id
-where netflix_titles_info.title = 'The Starling';
-
-5. Querying the database with two select statements. This gives me the release year and title and of the movie with the oldest movie in the database.
-
+-- Query 5: Find the oldest movie in the database.
+-- Uses a subquery to identify the earliest release year for movies and selects the matching title.
 SELECT title, release_year
-FROM "netflix_titles_info"
+FROM netflix_titles_info
 WHERE type = 'Movie'
 AND release_year <=
-(SELECT MIN(release_year)
-FROM "netflix_titles_info"
-WHERE type = 'Movie');
-
+    (SELECT MIN(release_year)
+     FROM netflix_titles_info
+     WHERE type = 'Movie');
