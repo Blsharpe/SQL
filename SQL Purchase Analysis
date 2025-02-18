@@ -1,5 +1,10 @@
 #Querying a customer and purchase database to analyze sales, customer demographics, and invoice data.
 
+/* This analysis uncovers sales trends, revenue distribution, and customer demographics 
+within the Chinook music store database. It highlights top-performing composers and genres, 
+identifies key international markets, and examines purchasing behavior in specific regions. 
+These insights help refine marketing strategies, optimize inventory, and understand customer
+spending patterns for better business decisions.*/
 
 -- Query 1: Calculate revenue and categorize it by artist, genre, and year.
 -- Joins four related tables: invoice_items, tracks, invoices, and genres.
@@ -40,7 +45,6 @@ FROM chinook.customers
 WHERE Country != 'USA';
 
 -- Query 3: Retrieve a list of customers specifically from Brazil.
-
 SELECT CustomerId, FirstName, LastName, Country
 FROM chinook.customers
 WHERE Country = 'Brazil';
