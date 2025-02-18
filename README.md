@@ -1,6 +1,6 @@
 # SQL Portfolio
 
-Welcome to my SQL Portfolio! This repository showcases various SQL projects I've completed, demonstrating proficiency in data analysis and database management.
+Welcome to my SQL Portfolio! This repository showcases various SQL projects I've completed, demonstrating my proficiency in data analysis and database management.
 
 ## Projects
 
